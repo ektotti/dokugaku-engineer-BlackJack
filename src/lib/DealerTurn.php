@@ -14,7 +14,7 @@ class DealerTurn extends Turn
         
         while ($score <= 17) {
             $drawnCard = $this->deck->drawOne();
-            echo "ディーラーの引いたカードは{$drawnCard->getPattern()}の{$drawnCard->getNumber()}です。" . PHP_EOL;
+            echo "ディーラーの引いたカードは{$drawnCard->declareCard()}です。" . PHP_EOL;
             $this->hand[] = $drawnCard;
             $score = $handEvaluator->getScore($this->hand);
         }

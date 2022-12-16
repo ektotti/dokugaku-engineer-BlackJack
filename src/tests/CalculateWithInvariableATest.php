@@ -2,9 +2,9 @@
 
 use PHPUnit\Framework\TestCase;
 require_once __DIR__ . '/../lib/Card.php';
-require_once __DIR__ . '/../lib/CaluculateWithInvariableA.php';
+require_once __DIR__ . '/../lib/CalculateWithInvariableA.php';
 
-class CaluculateWithInvariableATest extends TestCase
+class CalculateWithInvariableATest extends TestCase
 {
     public function testGetScore(): void
     {
@@ -12,7 +12,7 @@ class CaluculateWithInvariableATest extends TestCase
         $cardB = new Card('D2');
         $cardC = new Card('SK');
         $cardD = new Card('DA');
-        $rule = new CaluculateWithInvariableA;
+        $rule = new CalculateWithInvariableA;
         $this->assertSame(12, $rule->getScore([$cardA, $cardB]));
         $this->assertSame(11, $rule->getScore([$cardC, $cardD]));
     }
