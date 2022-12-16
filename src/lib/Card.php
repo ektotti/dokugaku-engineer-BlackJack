@@ -19,7 +19,8 @@ class Card
         "K" => 10,
         "A" => 1,
     ];
-
+    const MIN_ACE_RANK = 1;
+    const MAX_ACE_RANK = 11;
     private $card;
     public function __construct($card)
     {
@@ -44,5 +45,4 @@ class Card
     public function declareCard() {
         return "{$this->getPattern()}の{$this->getNumber()}";
     }
-
 }

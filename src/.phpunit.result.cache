@@ -1,1 +1,1 @@
-{"version":1,"defects":{"CaluculateWithInvariableATest::testGetScore":3},"times":{"DeckTest::testDeck":0,"CaluculateWithInvariableATest::testGetScore":0.083}}
+{"version":1,"defects":{"CaluculateWithInvariableATest::testGetScore":3,"CalculateWithVariableATest::testGetScore":3,"DealerTurnTest::testDealerTurn":3},"times":{"DeckTest::testDeck":0,"CaluculateWithInvariableATest::testGetScore":0.083,"CalculateWithInvariableATest::testGetScore":0.081,"CalculateWithVariableATest::testGetScore":0,"DealerTurnTest::testDealerTurn":0.037}}

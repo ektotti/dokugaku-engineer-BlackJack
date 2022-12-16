@@ -1,6 +1,7 @@
 <?php
 require_once('Card.php');
 require_once('CalculateWithInvariableA.php');
+require_once('CalculateWithVariableA.php');
 require_once('UserTurn.php');
 require_once('DealerTurn.php');
 
@@ -25,11 +26,11 @@ class BlackJackGame
         echo "あなたの引いたカードは{$this->playerHand[1]->declareCard()}です。" . PHP_EOL;
         echo "ディーラーの引いたカードは{$this->dealerHand[0]->declareCard()}です。" . PHP_EOL;
         echo "ディーラーの引いた2枚目のカードはわかりません。" . PHP_EOL;
-        $rule = new CalculateWithInvariableA;
+        $rule = new CalculateWithVariableA;
         $userTurn = new UserTurn($this->deck, $this->playerHand, $rule);
         $userScore = $userTurn->start();
         
-        $dealerTurn = new DealerTurn($this->deck, $this->playerHand, $rule);
+        $dealerTurn = new DealerTurn($this->deck, $this->dealerHand, $rule);
         $dealerScore = $dealerTurn->start();
         $this->judgement($userScore, $dealerScore);
     }
@@ -51,7 +52,7 @@ class BlackJackGame
         if($dealerScore > self::TWENTY_ONE) {
             $this->overTwentyOne($dealerScore, false);
         }
-        echo "ディーラーの得点は{$dealerScore}";
+        echo "ディーラーの得点は{$dealerScore}点です。";
         if($userScore > $dealerScore) {
             echo "あなたの勝ちです！。".PHP_EOL;
         } elseif($userScore < $dealerScore) {
