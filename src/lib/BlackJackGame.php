@@ -1,5 +1,7 @@
 <?php
 require_once('Card.php');
+require_once('InitiateGameController.php');
+require_once('InitiateTwoPlayerGame.php');
 require_once('CalculateWithInvariableA.php');
 require_once('CalculateWithVariableA.php');
 require_once('UserTurn.php');
@@ -8,9 +10,9 @@ require_once('DealerTurn.php');
 class BlackJackGame
 {
     const TWENTY_ONE = 21;
-    private $deck;
-    private $playerHand;
-    private $dealerHand;
+    protected $deck;
+    protected $playerHand;
+    protected $dealerHand;
 
     public function __construct(Deck $deck)
     {
@@ -21,18 +23,20 @@ class BlackJackGame
 
     public function start()
     {
+        echo 'ブラックジャックゲームへようこそ。'.PHP_EOL;
+        echo 'playerは何名ですか？'.PHP_EOL;
         echo 'ブラックジャックを開始します。' . PHP_EOL;
-        echo "あなたの引いたカードは{$this->playerHand[0]->declareCard()}です。" . PHP_EOL;
-        echo "あなたの引いたカードは{$this->playerHand[1]->declareCard()}です。" . PHP_EOL;
-        echo "ディーラーの引いたカードは{$this->dealerHand[0]->declareCard()}です。" . PHP_EOL;
-        echo "ディーラーの引いた2枚目のカードはわかりません。" . PHP_EOL;
-        $rule = new CalculateWithVariableA;
-        $userTurn = new UserTurn($this->deck, $this->playerHand, $rule);
-        $userScore = $userTurn->start();
+        $initRule = new InitiateTwoPlayerGame($this->deck);
+        $initController = new InitiateGameController($initRule);
+        $hands = $initController->drawCard();
+        $initController->declareCard($hands);
+        // $rule = new CalculateWithVariableA;
+        // $userTurn = new UserTurn($this->deck, $this->playerHand, $rule);
+        // $userScore = $userTurn->start();
         
-        $dealerTurn = new DealerTurn($this->deck, $this->dealerHand, $rule);
-        $dealerScore = $dealerTurn->start();
-        $this->judgement($userScore, $dealerScore);
+        // $dealerTurn = new DealerTurn($this->deck, $this->dealerHand, $rule);
+        // $dealerScore = $dealerTurn->start();
+        // $this->judgement($userScore, $dealerScore);
     }
 
     static function overTwentyOne($score, $isUser = true){
