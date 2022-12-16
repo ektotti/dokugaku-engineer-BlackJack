@@ -2,6 +2,7 @@
 require_once('Card.php');
 require_once('InitiateGameController.php');
 require_once('InitiateTwoPlayerGame.php');
+require_once('InitiateGameWithCpu.php');
 require_once('CalculateWithInvariableA.php');
 require_once('CalculateWithVariableA.php');
 require_once('UserTurn.php');
@@ -24,9 +25,19 @@ class BlackJackGame
     public function start()
     {
         echo 'ブラックジャックゲームへようこそ。'.PHP_EOL;
-        echo 'playerは何名ですか？'.PHP_EOL;
+        echo '参加者は何名ですか？(1/2/3/4)'.PHP_EOL;
+        $participantNum = fgets(STDIN);
+        $participantNum = trim($participantNum);
+
+        if((int) $participantNum === 1) {
+            $initRule = new InitiateTwoPlayerGame($this->deck);
+        } elseif((int) $participantNum >= 2 && (int) $participantNum <= 4) {
+            $initRule = new InitiateGameWithCpu($this->deck, (int) $participantNum);
+        }else{
+            die('参加人数が不正です');
+        }
+        
         echo 'ブラックジャックを開始します。' . PHP_EOL;
-        $initRule = new InitiateTwoPlayerGame($this->deck);
         $initController = new InitiateGameController($initRule);
         $hands = $initController->drawCard();
         $initController->declareCard($hands);

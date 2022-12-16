@@ -6,7 +6,7 @@ class InitiateTwoPlayerGame implements InitiateInterface
 {
     const PARTICIPANT_NUM = 2;
     const PLAYER_NAME = ['あなた', 'ディーラー'];
-    public function __construct(private Deck $deck)
+    public function __construct(private Deck $deck, int $participantNum = 1)
     {
     }
 
