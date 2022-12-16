@@ -1,0 +1,17 @@
+{
+    "name": "totaninorihiro/black-jack",
+    "autoload": {
+        "psr-4": {
+            "Totaninorihiro\\BlackJack\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "github user name",
+            "email": "ektotti@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
