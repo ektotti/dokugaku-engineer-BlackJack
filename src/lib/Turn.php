@@ -11,5 +11,5 @@ abstract class Turn
         $this->hand = $hand;
         $this->rule = $rule;
     }
-    abstract public function start();
+    abstract public function start($name = null);
 }

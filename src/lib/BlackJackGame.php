@@ -3,23 +3,24 @@ require_once('Card.php');
 require_once('InitiateGameController.php');
 require_once('InitiateTwoPlayerGame.php');
 require_once('InitiateGameWithCpu.php');
+require_once('TurnInterface.php');
+require_once('TurnWithCpu.php');
+require_once('TurnWithoutCpu.php');
 require_once('CalculateWithInvariableA.php');
 require_once('CalculateWithVariableA.php');
 require_once('UserTurn.php');
 require_once('DealerTurn.php');
+require_once('CpuTurn.php');
 
 class BlackJackGame
 {
     const TWENTY_ONE = 21;
-    protected $deck;
-    protected $playerHand;
-    protected $dealerHand;
+    private $deck;
+    private $hands;
 
     public function __construct(Deck $deck)
     {
         $this->deck = $deck;
-        $this->playerHand = $this->deck->drawTwo();
-        $this->dealerHand = $this->deck->drawTwo();
     }
 
     public function start()
@@ -36,45 +37,61 @@ class BlackJackGame
         }else{
             die('参加人数が不正です');
         }
-        
-        echo 'ブラックジャックを開始します。' . PHP_EOL;
-        $initController = new InitiateGameController($initRule);
-        $hands = $initController->drawCard();
-        $initController->declareCard($hands);
-        // $rule = new CalculateWithVariableA;
-        // $userTurn = new UserTurn($this->deck, $this->playerHand, $rule);
-        // $userScore = $userTurn->start();
-        
-        // $dealerTurn = new DealerTurn($this->deck, $this->dealerHand, $rule);
-        // $dealerScore = $dealerTurn->start();
-        // $this->judgement($userScore, $dealerScore);
+        $this->initiateGame($initRule);
+
+        if((int) $participantNum === 1) {
+            $drawingTurn = new TurnWithoutCpu($this->deck, null, $this->hands);
+        } elseif((int) $participantNum >= 2 && (int) $participantNum <= 4) {
+            $drawingTurn = new TurnWithCpu($this->deck, null, $this->hands);
+        }else{
+            die('参加人数が不正です');
+        }
+        $scores = $this->runDrawingTurn($drawingTurn);
+
+        $this->judgement($scores);
+
+        echo 'ブラックジャックを終了します。'.PHP_EOL;
     }
 
-    static function overTwentyOne($score, $isUser = true){
-        $loser = $isUser ? 'あなた' : 'ディーラー' ;
-        $winner = $isUser ? 'ディーラー' : 'あなた' ;
-        $message = <<<EOM
-        {$loser}の得点は{$score}です。
-        {$winner}の勝ちです。
-        ブラックジャックを終了します。
-        EOM;
-        die($message);
-    }
-
-    private function judgement($userScore, $dealerScore)
+    private function initiateGame(InitiateInterface $initRule)
     {
-        echo "あなたの得点は{$userScore}です。" . PHP_EOL;
-        if($dealerScore > self::TWENTY_ONE) {
-            $this->overTwentyOne($dealerScore, false);
+        echo 'ブラックジャックを開始します。' . PHP_EOL;
+        $this->hands = $initRule->drawCard(); 
+        $initRule->declareCard($this->hands);
+    }
+
+    private function runDrawingTurn(TurnInterface $drawingTurn)
+    {
+        echo '各プレイヤーがヒットかステイを選択します。';
+        return $drawingTurn->startDrawingTurn();
+    }
+
+    private function judgement(array $scores)
+    {
+        $dealerScore = array_pop($scores);
+
+        foreach ($scores as $playerName => $score) {
+            if($score > self::TWENTY_ONE) {
+                echo "{$playerName}はバーストです。負けました。".PHP_EOL;
+                continue;
+            }
+            
+            if($dealerScore > self::TWENTY_ONE) {
+                echo "ディーラーはバーストです。{$playerName}は勝ちました。".PHP_EOL;
+                continue;
+            }
+            
+            if(self::TWENTY_ONE - $score < self::TWENTY_ONE - $dealerScore) {
+                echo "{$playerName}は勝ちました。".PHP_EOL;
+                continue;
+            }
+            
+            if(self::TWENTY_ONE - $score > self::TWENTY_ONE - $dealerScore) {
+                echo "{$playerName}は負けました。".PHP_EOL;
+                continue;
+            }
+
+            echo '引き分けです。'.PHP_EOL;
         }
-        echo "ディーラーの得点は{$dealerScore}点です。";
-        if($userScore > $dealerScore) {
-            echo "あなたの勝ちです！。".PHP_EOL;
-        } elseif($userScore < $dealerScore) {
-            echo "ディーラーの勝ちです！。".PHP_EOL;
-        } else{
-            echo "引き分けです。".PHP_EOL;
-        }
-        echo "ブラックジャックを終了します。".PHP_EOL;
     }
 }

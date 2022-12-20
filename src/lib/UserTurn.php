@@ -5,7 +5,7 @@ require_once('HandEvaluator.php');
 
 class UserTurn extends Turn
 {
-    public function start()
+    public function start($name = null)
     {
         $handEvaluator = new HandEvaluator($this->rule);
         $answer = 'Y';
